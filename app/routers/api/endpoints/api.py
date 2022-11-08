@@ -1,6 +1,6 @@
 
 from fastapi import APIRouter, Response, status
-from ....models.api_models import Item, ItemList
+from ....models.api_models import Item, ItemList,ItemListDict
 from typing import Optional, List
 
 import pandas as pd
@@ -9,7 +9,7 @@ import os
 router = APIRouter()
 
 #Search 
-@router.get("/search", response_model=ItemList)
+@router.get("/search", response_model=ItemListDict)
 async def search(name: str = None, category: str = None, nutrient: str = None):
     mainPath = os.path.dirname(os.path.abspath(__file__))
     data = pd.read_csv(mainPath+'/finalData.csv')
@@ -23,18 +23,18 @@ async def search(name: str = None, category: str = None, nutrient: str = None):
     data = (data.groupby([data['description'],data['foodCategory']])
        .apply(lambda x: [{k:v} for k, v in zip( x['name'],x['ammount'])])
        .reset_index(name='nutrients'))
-    return ItemList(items=data.to_dict(orient="records"))
+    return ItemListDict(items=data.to_dict(orient="records"))
 
-@router.post("/search_by_nutrients", response_model=ItemList)
+@router.post("/search_by_nutrients", response_model=ItemListDict)
 async def search_by_nutrients(nutrientsList: Optional[List[str]] = []):
-    if nutrientsList != []:
+    if nutrientsList == []:
         mainPath = os.path.dirname(os.path.abspath(__file__))
         data = pd.read_csv(mainPath+'/finalData.csv')
         data = data.fillna('')
         data = (data.groupby([data['name'],data['type']])
        .apply(lambda x: [{k:v} for k, v in zip( x['description'],x['ammount'])])
        .reset_index(name='food'))
-        return ItemList(items=data.to_dict(orient="records"))
+        return ItemListDict(items=data.to_dict(orient="records"))
 
     else:
         mainPath = os.path.dirname(os.path.abspath(__file__))
@@ -44,7 +44,7 @@ async def search_by_nutrients(nutrientsList: Optional[List[str]] = []):
         data = (data.groupby([data['name'],data['type']])
        .apply(lambda x: [{k:v} for k, v in zip( x['description'],x['ammount'])])
        .reset_index(name='food'))
-        return ItemList(items=data.to_dict(orient="records"))
+        return ItemListDict(items=data.to_dict(orient="records"))
     
 @router.get("/nutrients", response_model=ItemList)
 async def nutrients():

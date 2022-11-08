@@ -18,6 +18,8 @@ class Item(BaseModel):
     portion: Optional[str] = None
     nutrients: Optional[List[ItemNutrient]] = None
     
-class ItemList(BaseModel):
+class ItemListDict(BaseModel):
     items: List[dict]
+class ItemList(BaseModel):
+    items: List[str]
     
