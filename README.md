@@ -13,7 +13,12 @@ To access documentation run app and access go  http://localhost:8000/docs
 Instructions tu run.
 
 #Build Docker Image 
+```console
 docker build -t food-api .
+```
 
 #Run Containr
+```console
 docker run -d -p 80:80 -e WORKERS_PER_CORE="4" food-api
+```
+
