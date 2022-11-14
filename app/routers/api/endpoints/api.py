@@ -60,4 +60,7 @@ async def nutrients():
     nutrientsList = data['name'].unique()
     return ItemList(items=nutrientsList.tolist())
 
-
+@router.get("/check")
+def check_status():
+    return Response(status_code=status.HTTP_200_OK)
+    
