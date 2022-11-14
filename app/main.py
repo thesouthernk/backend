@@ -8,7 +8,7 @@ from .routers.api.routes import api_router
 
 app = FastAPI()
 
-origins = ['*'];
+origins = ['*','https://cheery-gelato-5b9506.netlify.app/'];
 
 app.add_middleware(
     CORSMiddleware,
