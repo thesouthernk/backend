@@ -15,7 +15,11 @@ async def search(name: str = None, category: str = None, nutrient: str = None):
     data = pd.read_csv(mainPath+'/finalData.csv')
     data = data.fillna('')
     if name:
-        data = data[data['description'].str.contains(name, case=False)]
+        data['description_str']=data.description.str.replace("[^A-Za-z]", '')
+        name_str=[x for x in name if x.isalpha()]
+        name_str = ''.join(name_str)
+        data = data[data['description_str'].str.contains(name_str.replace("[^A-Za-z0-9]", ''), case=False)]
+        
     if category:
         data = data[data['foodCategory'].str.contains(category, case=False)]
     if nutrient:
