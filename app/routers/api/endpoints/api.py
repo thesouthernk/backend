@@ -20,8 +20,10 @@ async def search(name: str = None, category: str = None, nutrient: str = None):
         data = data[data['foodCategory'].str.contains(category, case=False)]
     if nutrient:
         data = data[data['name'].str.contains(nutrient, case=False)]
-    data = (data.groupby([data['description'],data['foodCategory']])
-       .apply(lambda x: [{k:v} for k, v in zip( x['name'],x['ammount'])])
+    if data.empty:
+        return ItemListDict(items=data.to_dict(orient="records"))
+    data = (data.groupby([data['description'],data['foodCategory'],data['proteinValue'],data['carbohydrateValue'],data['fatValue'],data['gramWeight'],data['portion']])
+       .apply(lambda x: [{"name":k,"weight":v} for k, v in zip( x['name'],x['ammount'])])
        .reset_index(name='nutrients'))
     return ItemListDict(items=data.to_dict(orient="records"))
 
