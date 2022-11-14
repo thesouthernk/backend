@@ -8,15 +8,18 @@ from .routers.api.routes import api_router
 
 app = FastAPI()
 
-origins = ['*','https://cheery-gelato-5b9506.netlify.app/'];
+origins = ['*'];
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+origins = [
+    "*",
+]
 
 app.mount("/files", StaticFiles(directory="./app/files/" , html = True), name="site")
 
